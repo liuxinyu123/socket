@@ -1,6 +1,7 @@
 #include <iostream>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 
 using std::cout;
 using std::endl;
@@ -12,5 +13,8 @@ int main (int argc, char *argv[])
 
 	if (-1 == sock)
 		cerr << "create socket fail" << endl;
+	struct addr_in connaddr;
+	connaddr.s_addr = inet_addr ("127.0.0.1");
+
 
 }

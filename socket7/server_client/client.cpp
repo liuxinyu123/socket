@@ -31,7 +31,7 @@ int main (int argc, char *argv[])
 	{
 		write (sock, send_buf, strlen (send_buf));
 		int ret = read (sock, receive_buf, sizeof (receive_buf));	
-		cout << receive_buf << endl;
+		fputs (receive_buf, stdout);
 		std::memset (send_buf, 0, sizeof (send_buf));
 		std::memset (receive_buf, 0, sizeof (receive_buf));
 	}

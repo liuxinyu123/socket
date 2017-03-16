@@ -37,7 +37,7 @@ int main (int argc, char *argv[])
 	int conn  = accept (listenfd, (sockaddr*)(&client_addr), &client_len);
 	if (-1 == conn)
 		cerr << "accept error" << endl;
-	cout << "IP: " << inet_ntoa (client_addr.sin_addr) << "Port: " << ntohs (client_addr.sin_port) << endl; 
+	cout << "IP: " << inet_ntoa (client_addr.sin_addr) << " Port: " << ntohs (client_addr.sin_port) << endl; 
 
 	char receive_buf[1024];
 	while (1)

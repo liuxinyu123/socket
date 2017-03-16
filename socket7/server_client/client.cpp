@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <cstring>
 #include <unistd.h>
+#include <cstdio>
 
 using std::cout;
 using std::endl;
@@ -24,11 +25,18 @@ int main (int argc, char *argv[])
 	if (-1 == connect (sock, (sockaddr*)&connaddr, sizeof (connaddr)))
 		cerr << "connect error" << endl;
 
-	char send_buf[1024];
-	while (1)
+	char send_buf[1024] = {0};
+	char receive_buf[1024] = {0};
+	while (fgets (send_buf, sizeof (receive_buf), stdin) != nullptr)
 	{
-		
-	
+		write (sock, send_buf, strlen (send_buf));
+		int ret = read (sock, receive_buf, sizeof (receive_buf));	
+		cout << receive_buf << endl;
+		std::memset (send_buf, 0, sizeof (send_buf));
+		std::memset (receive_buf, 0, sizeof (receive_buf));
 	}
 
+	close (sock);
+
+	return 0;
 }

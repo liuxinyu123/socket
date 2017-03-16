@@ -3,6 +3,8 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
 
 using std::cout;
 using std::endl;
@@ -18,8 +20,8 @@ int main (int argc, char *argv[])
 	std::memset(&serveraddr, 0, sizeof (serveraddr));//初始化为0
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_port = htons (5555);
-	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	//serveraddr.sin_addr.s_addr = inet_addr ("127.0.0.1");//这三种都可以
+	//serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	serveraddr.sin_addr.s_addr = inet_addr("127.0.0.1");//这三种都可以
 	//inet_aton ("127.0.0.1", &serveraddr.sin_addr);
 	
 	if (-1 == bind (listenfd, (sockaddr*)(&serveraddr), sizeof (serveraddr)))
@@ -32,9 +34,22 @@ int main (int argc, char *argv[])
 	socklen_t client_len = sizeof (client_addr);
 	std::memset (&client_addr, 0, sizeof (client_addr));
 
-	if (-1 == accept (listenfd, (sockaddr*)(&client_addr), &client_len))
+	int conn  = accept (listenfd, (sockaddr*)(&client_addr), &client_len);
+	if (-1 == conn)
 		cerr << "accept error" << endl;
+	cout << "IP: " << inet_ntoa (client_addr.sin_addr) << "Port: " << ntohs (client_addr.sin_port) << endl; 
 
+	char receive_buf[1024];
+	while (1)
+	{
+		std::memset (receive_buf, 0, sizeof (receive_buf));
+		int ret = read (conn, receive_buf, sizeof (receive_buf));
+		cout << receive_buf << endl;
+		write (conn, receive_buf, ret);		
+	}
+	
+	close (listenfd);
 
+	return 0;
 
 }

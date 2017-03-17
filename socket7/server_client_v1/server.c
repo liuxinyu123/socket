@@ -42,13 +42,20 @@ int main (int argc, char *argv[])
 	if (-1 == conn)
 		ERR_EXIT ("accept");
 
-	printf ("ip = %s, port = %u", inet_ntoa (client_addr.sin_addr), ntohs (client_addr.sin_port));
+	printf ("ip = %s, port = %u\n", inet_ntoa (client_addr.sin_addr), ntohs (client_addr.sin_port));
+	char walcome[20] = "connect ok";
+	write (conn, walcome, strlen (walcome));
 
 	char receive_buf[1024] = {0};
 	while (1)
 	{	
 		memset (receive_buf, 0, sizeof (receive_buf));
 		int ret = read (conn, receive_buf, sizeof (receive_buf));
+		if (0 == ret)
+		{
+			puts("client closed\n");
+			break;
+		}
 		write (conn, receive_buf, ret);
 		fputs (receive_buf, stdout);
 	}

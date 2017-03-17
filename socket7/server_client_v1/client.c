@@ -34,8 +34,10 @@ int main (int argc, char *argv[])
 	puts (receive_buf);
 	while (fgets (send_buf, sizeof (send_buf), stdin) != NULL)
 	{
-		memset (receive_buf, 0, sizeof (receive_buf));
 		write (sock, send_buf, strlen (send_buf));
+		memset (send_buf, 0, sizeof (send_buf));
+
+		memset (receive_buf, 0, sizeof (receive_buf));
 		int ret = read (sock, receive_buf, sizeof (receive_buf));
 
 		if (0 == ret)
@@ -44,7 +46,6 @@ int main (int argc, char *argv[])
 			break;
 		}
 		fputs (receive_buf, stdout);
-		memset (send_buf, 0, sizeof (send_buf));
 	}
 
 	close (sock);
